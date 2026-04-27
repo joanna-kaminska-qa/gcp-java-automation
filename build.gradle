@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.github.joannakaminska'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    implementation 'com.google.cloud:google-cloud-storage:2.22.2'
+
+    // Testowanie
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
+    // Testcontainers
+    testImplementation "org.testcontainers:testcontainers:1.19.0"
+    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
+    testImplementation "org.testcontainers:gcloud:1.19.0"
+}
+
+test {
+    useJUnitPlatform()
+}
