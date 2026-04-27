@@ -6,6 +6,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Container-blue)
 ![GitHub Actions](https://img.shields.io/badge/GitHub--Actions-CI--CD-white?logo=github)
 ![Gradle](https://img.shields.io/badge/Gradle-8-brightgreen)
+![Build Status](https://github.com/joanna-kaminska-qa/gcp-java-automation/actions/workflows/tests.yml/badge.svg)
 
 An educational project demonstrating API test automation using **RestAssured**, **Docker**, and **Google Cloud Platform (GCP)** services.
 
