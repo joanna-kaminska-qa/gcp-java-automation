@@ -1,6 +1,8 @@
 import com.google.cloud.storage.*;
 import com.google.auth.oauth2.GoogleCredentials;
 import org.junit.jupiter.api.*;
+
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -19,11 +21,30 @@ public class CloudStorageTest {
 
     @BeforeAll
     static void setup() throws Exception {
-        // Połączenie z prawdziwym GCP przy użyciu pliku klucza
-        storage = StorageOptions.newBuilder()
-                .setCredentials(GoogleCredentials.fromStream(new FileInputStream(KEY_PATH)))
-                .build()
-                .getService();
+        String gcpKeyJson = System.getenv("GCP_KEY_JSON");
+        String projectId = System.getenv("GCP_PROJECT_ID");
+        GoogleCredentials credentials;
+
+        if (gcpKeyJson != null && !gcpKeyJson.isEmpty()) {
+            // SCENARIUSZ GITHUB: Używamy klucza ze zmiennej środowiskowej
+            System.out.println(">>> Inicjalizacja: Używam klucza z GitHub Secrets");
+            credentials = GoogleCredentials.fromStream(
+                    new ByteArrayInputStream(gcpKeyJson.getBytes(StandardCharsets.UTF_8))
+            );
+        } else {
+            // SCENARIUSZ LOKALNY: Używamy pliku project-key.json
+            System.out.println(">>> Inicjalizacja: Używam pliku lokalnego: " + KEY_PATH);
+            credentials = GoogleCredentials.fromStream(new FileInputStream(KEY_PATH));
+        }
+
+        StorageOptions.Builder optionsBuilder = StorageOptions.newBuilder().setCredentials(credentials);
+
+        // Jeśli mamy podane Project ID w env, to je ustawiamy
+        if (projectId != null && !projectId.isEmpty()) {
+            optionsBuilder.setProjectId(projectId);
+        }
+
+        storage = optionsBuilder.build().getService();
     }
 
     @Test
